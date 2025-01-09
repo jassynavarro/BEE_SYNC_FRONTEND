@@ -4,35 +4,46 @@
     "slug": "SOFTENG",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/bee.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
+    "resizeMode": "contain",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/bee.png",
         "backgroundColor": "#ffffff"
       }
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/bee.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/bee.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+    [
+      "expo-font", 
+      {
+        "fonts": [
+          "../assets/fonts/WorkSans-Bold.ttf",
+          "../assets/fonts/WorkSans-Medium.ttf",
+          "../assets/fonts/WorkSans-SemiBold.ttf"
+        ]
+      }
+    ]
     ],
     "experiments": {
       "typedRoutes": true
