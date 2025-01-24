@@ -1,84 +1,77 @@
 import { SafeAreaView, ScrollView, ImageBackground, StyleSheet, Text, View,Image, TouchableOpacity, StatusBar } from 'react-native'
+import React, { useState, useEffect } from 'react';
 import Images from '../../../constants/images';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Alert } from 'react-native';
 
 // THIS IS THE HIVEMATE'S TASK LIST PAGE
+const HiveMembersScreen = () => {
+  const [members, setMembers] = useState<HiveMember[]>([]); // Specify type for state
+  const [error, setError] = useState<string | null>(null);
 
-const task = () => {
+  interface HiveMember {
+    userId: number;
+    firstname: string;
+    img_path: string;
+  }
+  
+  // Fetch Hive Members from the API
+  const fetchHiveMembers = async () => {
+
+    const jwtToken = await AsyncStorage.getItem('jwtToken');
+
+    if (!jwtToken) {
+      Alert.alert('Error', 'No JWT token found. Please log in again.');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://192.168.1.56:8080/HiveMembers/membersInfo', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${jwtToken}` // Send the JWT token in the header
+        }});
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      if (!Array.isArray(data) || data.length === 0) {
+        console.log('No hive members found.');
+      } else {
+        console.log('Hive Members:', data);
+        setMembers(data);
+      }
+    } catch (err: unknown) {
+      console.error('Error:', err);
+      setError((err as Error).message); // Safely handle unknown error type
+    }
+  };
+
+  useEffect(() => {
+    fetchHiveMembers();
+  }, []);
+
   return (
-    <ImageBackground source={Images.Pattern} style={ style.background }>
+    <ImageBackground source={Images.Pattern} style={style.background}>
       <SafeAreaView>
-        <ScrollView style={ style.scrollView }>
-
-            <SafeAreaView style={ style.boxes }>
-              <Image style={ style.profile } source={Images.Profile7}></Image>
-              <Text style={ style.name }>Mikasa</Text>
-              <TouchableOpacity style={style.button} onPress={()=>{}}>
+        <ScrollView style={style.scrollView}>
+          {members.map((member) => (
+            <SafeAreaView key={member.userId} style={style.boxes}>
+              <Image style={style.profile} source={{ uri: member.img_path }} />
+              <Text style={style.name}>{member.firstname}</Text>
+              <TouchableOpacity style={style.button} onPress={() => {}}>
                 <Text style={style.buttonText}>View Task</Text>
               </TouchableOpacity>
             </SafeAreaView>
-
-            <SafeAreaView style={ style.boxes }>
-            <Image style={ style.profile } source={Images.Profile8}></Image>
-              <Text style={ style.name }>Eren</Text>
-              <TouchableOpacity style={style.button} onPress={()=>{}}>
-                <Text style={style.buttonText}>View Task</Text>
-              </TouchableOpacity>
-            </SafeAreaView>
-
-            <SafeAreaView style={ style.boxes }>
-            <Image style={ style.profile } source={Images.Profile1}></Image>
-              <Text style={ style.name }>Armin</Text>
-              <TouchableOpacity style={style.button} onPress={()=>{}}>
-                <Text style={style.buttonText}>View Task</Text>
-              </TouchableOpacity>
-            </SafeAreaView>
-
-            <SafeAreaView style={ style.boxes }>
-            <Image style={ style.profile } source={Images.Profile2}></Image>
-              <Text style={ style.name }>Levi</Text>
-              <TouchableOpacity style={style.button} onPress={()=>{}}>
-                <Text style={style.buttonText}>View Task</Text>
-              </TouchableOpacity>
-            </SafeAreaView>
-
-            <SafeAreaView style={ style.boxes }>
-            <Image style={ style.profile } source={Images.Profile3}></Image>
-              <Text style={ style.name }>Erwin</Text>
-              <TouchableOpacity style={style.button} onPress={()=>{}}>
-                <Text style={style.buttonText}>View Task</Text>
-              </TouchableOpacity>
-            </SafeAreaView>
-
-            <SafeAreaView style={ style.boxes }>
-            <Image style={ style.profile } source={Images.Profile4}></Image>
-              <Text style={ style.name }>Historia</Text>
-              <TouchableOpacity style={style.button} onPress={()=>{}}>
-                <Text style={style.buttonText}>View Task</Text>
-              </TouchableOpacity>
-            </SafeAreaView>
-            
-            <SafeAreaView style={ style.boxes }>
-            <Image style={ style.profile } source={Images.Profile5}></Image>
-              <Text style={ style.name }>Hange</Text>
-              <TouchableOpacity style={style.button} onPress={()=>{}}>
-                <Text style={style.buttonText}>View Task</Text>
-              </TouchableOpacity>
-            </SafeAreaView>
-
-            <SafeAreaView style={ style.boxes }>
-            <Image style={ style.profile } source={Images.Profile6}></Image>
-              <Text style={ style.name }>Annie</Text>
-              <TouchableOpacity style={style.button} onPress={()=>{}}>
-                <Text style={style.buttonText}>View Task</Text>
-              </TouchableOpacity>
-            </SafeAreaView>
-
+          ))}
         </ScrollView>
       </SafeAreaView>
     </ImageBackground>
-  )
-}
-export default task
+  );
+};
+export default HiveMembersScreen;
 
 const style = StyleSheet.create({
   scrollView: {

@@ -9,8 +9,6 @@ const calendar = () => {
   const router = useRouter(); // Get the router object
   return (
     <SafeAreaView > 
-      <Text>Calendar</Text>
-
       <TouchableOpacity style={style.container} onPress={()=>router.push('/(add)/add_button')}>
         <Image source={Images.Add}></Image>
       </TouchableOpacity>
