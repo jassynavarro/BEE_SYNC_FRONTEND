@@ -1,101 +1,132 @@
-import { Pressable, StyleSheet, Text, View, Image, SafeAreaView, TouchableOpacity } from 'react-native'
+import React, { useState } from 'react';
+import { Modal, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { Drawer } from "expo-router/drawer";
-import Images from '../../constants/images';
 import { DrawerItemList } from '@react-navigation/drawer';
-import { router } from 'expo-router';
+import Images from '../../constants/images';
+import LogOutModal from './log_out/logOut'; // Import LogOutModal component
 
 const drawer_layout = () => {
+  const [modalVisible, setModalVisible] = useState(false);
+
+  // Function to handle Log Out button press
+  const handleLogOut = () => {
+    setModalVisible(true); // Show the modal
+  };
+
+  // Function to confirm log out
+  const confirmLogOut = () => {
+    setModalVisible(false); // Hide the modal
+    console.log("User logged out");
+    // Add actual log-out functionality here (e.g., clear auth state, navigate to login screen)
+  };
+
+  // Function to cancel log out
+  const cancelLogOut = () => {
+    setModalVisible(false); // Hide the modal without logging out
+  };
+
   return (
-    <Drawer
-      screenOptions={{
-        headerShown: false,
-        drawerPosition: 'right',
-        drawerActiveBackgroundColor: '#FFDB36', 
-        
-        drawerStyle: {
-          borderTopLeftRadius: 0,
-          borderBottomLeftRadius: 0,
-          backgroundColor: '#FFFCF0',
-          width: 250
-        },
-        drawerLabelStyle: {
-          color: '#616060',
-          fontFamily: 'Medium',
-          fontSize: 16
-        },
-        drawerItemStyle: {
-          padding: 15,
-          borderRadius: 0,
-          borderBottomWidth: 1, // Add a line separator
-          borderBottomColor: '#EFEFEF', // Light grey color for the separator
-        }
-      }}
-      drawerContent = { (props) => {
-        return (
-          <SafeAreaView>
-
-            <SafeAreaView style={[style.container]}>
+    <>
+      <Drawer
+        screenOptions={{
+          headerShown: false,
+          drawerPosition: 'right',
+          drawerActiveBackgroundColor: 'transparent',
+          drawerInactiveBackgroundColor: 'transparent',
+          drawerActiveTintColor: '#FFDB36',
+          drawerInactiveTintColor: '#616060',
+          drawerStyle: {
+            borderTopLeftRadius: 0,
+            borderBottomLeftRadius: 0,
+            backgroundColor: '#FFFCF0',
+            width: 250,
+          },
+          drawerLabelStyle: {
+            fontFamily: 'Medium',
+            fontSize: 17,
+          },
+          drawerItemStyle: {
+            padding: 15,
+            borderRadius: 0,
+            borderBottomWidth: 1,
+            borderBottomColor: '#EFEFEF',
+          },
+        }}
+        drawerContent={(props) => {
+          return (
+            <View style={{ paddingTop: 20 }}>
+              <View style={[style.container]}>
+                <Image
+                  style={[style.profile]}
+                  source={Images.Profile7}
+                  resizeMode='contain'
+                />
+                <Text style={[style.name]}>Mikasa</Text>
+                <Text style={[style.email]}>mikasaackerman@gmail.com</Text>
+              </View>
+              <DrawerItemList {...props} />
+            </View>
+          );
+        }}
+      >
+        <Drawer.Screen
+          name="(screens)"
+          options={{
+            drawerLabel: "Home",
+            drawerIcon: ({ focused }) => (
               <Image
-                style={[style.profile]}
-                source={Images.Profile7}
-                resizeMode='contain'
+                source={Images.Home}
+                style={[style.icon, { tintColor: focused ? '#FFDB36' : '#616060' }]}
               />
-              <Text style={[style.name]}>Mikasa</Text>
-              <Text style={[style.email]}>mikasaackerman@gmail.com</Text>
-            </SafeAreaView>
-            <DrawerItemList {...props}/>
+            ),
+          }}
+        />
+        <Drawer.Screen
+          name="main_menu/mainMenu"
+          options={{
+            drawerLabel: "Main Menu",
+            drawerIcon: ({ focused }) => (
+              <Image
+                source={Images.Main_Menu}
+                style={[style.icon, { tintColor: focused ? '#FFDB36' : '#616060' }]}
+              />
+            ),
+          }}
+        />
+        <Drawer.Screen
+          name="log_out/logOut"
+          options={{
+            drawerLabel: "Log Out",
+            drawerIcon: ({ focused }) => (
+              <Image
+                source={Images.Out}
+                style={[style.icon, { tintColor: focused ? '#FFDB36' : '#616060' }]}
+              />
+            ),
+          }}
+          listeners={{
+            drawerItemPress: handleLogOut, // Trigger log out confirmation when clicked
+          }}
+        />
+      </Drawer>
 
-          </SafeAreaView>
-        )
-      }}
-    >   
-      <Drawer.Screen 
-        name="(screens)"     
-        options={{
-          drawerLabel: "Home",
-          drawerIcon: () => (
-            <Image
-              source={Images.Home} // Replace with your image path
-              style={[style.icon]}
-            />
-          ),
-        }} 
+      {/* Log Out Confirmation Modal */}
+      <LogOutModal
+        visible={modalVisible}
+        onClose={cancelLogOut} // Close the modal if the user presses cancel
+        onConfirm={confirmLogOut} // Log out if the user confirms
       />
-      <Drawer.Screen 
-        name="main_menu"     
-        options={{
-          drawerLabel: "Main Menu",
-          drawerIcon: () => (
-            <Image
-              source={Images.Main_Menu} // Replace with your image path
-              style={[style.icon]}
-            />
-          ),
-        }} 
-      />          
-      <Drawer.Screen 
-        name="log_out"     
-        options={{
-          drawerLabel: "Log Out",
-          drawerIcon: () => (
-            <Image
-              source={Images.Out} // Replace with your image path
-              style={[style.icon]}
-            />
-          ),
-        }} 
-      />          
-    </Drawer>
+    </>
+  );
+};
 
-  )
-}
-export default drawer_layout
+export default drawer_layout;
 
 const style = StyleSheet.create({
   icon: {
-    width: 24, // Icon width
-    height: 24, // Icon height
-    resizeMode: 'contain', // Maintain aspect ratio
+    width: 24,
+    height: 24,
+    resizeMode: 'contain',
   },
   container: {
     height: 100,
@@ -103,30 +134,30 @@ const style = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FFEFA4',
-    paddingBottom: 12
+    paddingBottom: 12,
   },
   profile: {
     height: 50,
     width: 50,
     borderRadius: 25, // To make it circular
     position: 'absolute', // Absolute positioning for the image
-    top: 25, // Adjust to position the profile image at the top
-    left: 25
+    top: 25,
+    left: 25,
   },
   name: {
     fontFamily: 'Medium',
     fontSize: 22,
     color: '#404040',
-    position: 'absolute', // Position the name below the image
-    top: 25, // Adjust this to position the name below the image without overlapping
-    bottom: 45, // Adjust this value based on your preference
+    position: 'absolute',
+    top: 25,
+    bottom: 45,
   },
   email: {
     fontFamily: 'Medium',
     fontSize: 10,
     color: '#404040',
-    position: 'absolute', // Position the name below the image
-    top: 55, // Adjust this to position the name below the image without overlapping
-    right: 20, // Adjust this value based on your preference
+    position: 'absolute',
+    top: 55,
+    right: 20,
   },
-})
+});

@@ -1,98 +1,97 @@
-import { StatusBar } from "expo-status-bar";
-import {Button, Pressable, SafeAreaView, StyleSheet, Text, TouchableOpacity } from "react-native";
-import { Modal } from '../log_out/Modal';
-import { useState } from "react";
-import { router } from "expo-router";
+import React from 'react';
+import { Modal, StyleSheet, Text, SafeAreaView, TouchableOpacity } from 'react-native';
 
-// THIS IS THE LOG OUT LAYOUT.
-
-export default function out() {
-  const [islogOutOpen, setLogoutOpen] = useState(false)
-  return (
-    <SafeAreaView style={style.view}>
-
-      <StatusBar style="auto" />
-      <Button title="LOG OUT" onPress={() => setLogoutOpen(true)}></Button>
-      <Modal isOpen={islogOutOpen}>
-        <SafeAreaView style={style.container}>
-          <Text style={style.textLogout}>Log Out</Text>
-          <Text style={style.textPhrase}>Are you sure you want to logout?</Text>
-          
-          <Pressable style={style.cancelButton} onPress={() => {
-            setLogoutOpen(false)
-          }}>
-            <Text style={style.cancelText}>Cancel</Text>
-          </Pressable>
-
-          <TouchableOpacity style={style.logOut_button} onPress={()=>router.push('/')}>
-            <Text style={style.logout_buttonText}>Log Out</Text>
-          </TouchableOpacity>
-        </SafeAreaView>
-      </Modal>
-
-    </SafeAreaView>
-  )
+interface LogOutModalProps {
+  visible: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
 }
 
+const LogOutModal: React.FC<LogOutModalProps> = ({ visible, onClose, onConfirm }) => {
+  return (
+    <Modal
+      visible={visible}
+      animationType="fade"
+      transparent={true}
+      onRequestClose={onClose}
+    >
+      <SafeAreaView style={style.modalOverlay}>
+        <SafeAreaView style={style.modalContainer}>
+          <Text style={style.modalTitle}>Log Out</Text>
+          <Text style={style.modalMessage}>Are you sure you want to log out?</Text>
+          <SafeAreaView style={style.modalButtons}>
+            <TouchableOpacity style={style.modalButtonCancel} onPress={onClose}>
+              <Text style={style.modalButtonText}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={style.modalButtonLogout} onPress={onConfirm}>
+              <Text style={style.modalTextLogout}>Log Out</Text>
+            </TouchableOpacity>
+          </SafeAreaView>
+        </SafeAreaView>
+      </SafeAreaView>
+    </Modal>
+  );
+};
+
+export default LogOutModal;
+
 const style = StyleSheet.create({
-  view: {
+  modalOverlay: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'yellow'
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
   },
-  container: {
+  modalContainer: {
     backgroundColor: '#FFFCF0',
-    height: 240,
-    width: 340,
-    justifyContent: 'center',
+    padding: 20,
+    borderRadius: 10,
+    width: 300,
+    height: 150,
     alignItems: 'center',
-    marginBottom: 150,
-    borderRadius: 10
   },
-  textLogout: {
-    position: 'absolute',
-    top: 30,
+  modalTitle: {
+    marginTop: -5,
+    marginBottom: 12,
     fontFamily: 'Medium',
-    fontSize: 18,
-    color: '#404040'
+    fontSize: 16,
   },
-  textPhrase: {
-    position: 'absolute',
-    top: 100,
+  modalMessage: {
     fontFamily: 'Regular',
-    fontSize: 18,
-    color: '#404040'
+    fontSize: 15,
+    marginBottom: 20,
   },
-  cancelButton: {
-    position: 'absolute',
-    top: 167,
-    left: 60,
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
   },
-  cancelText: {
-    fontFamily: 'Medium',
-    fontSize: 18,
-    color: '#404040'
+  modalButtonCancel: {
+    padding: 10,
+    borderRadius: 5,
+    marginHorizontal: 10,
   },
-  logOut_button: {
-    position: 'absolute',
-    justifyContent: 'center',
-    top: 160,
-    right: 20,   
+  modalButtonLogout: {
     backgroundColor: '#FFDB36',
+    padding: 10,
+    marginHorizontal: 10,
     height: 40,
-    width: 150,
+    width: 100,
+    alignItems: 'center',
     borderRadius: 10,
     borderColor: '#AFB1B6',
     shadowColor: '#000', 
     shadowOpacity: 0, 
     elevation: 5
   },
-  logout_buttonText: {
-    position: 'absolute',
-    alignSelf: 'center',
-    color: '#FFFFFF',
-    fontSize: 16,   
+  modalButtonText: {
+    fontFamily: 'Medium',
+    color: '#404040',
+    fontSize: 15,
+  },
+  modalTextLogout: {
     fontFamily: 'Bold',
-  }
-})
+    color: '#FFFFFF',
+    fontSize: 15,
+  },
+});

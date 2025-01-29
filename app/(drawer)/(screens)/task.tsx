@@ -1,8 +1,9 @@
 import { SafeAreaView, ScrollView, ImageBackground, StyleSheet, Text, View,Image, TouchableOpacity, StatusBar } from 'react-native'
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Images from '../../../constants/images';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
+import { useFocusEffect } from 'expo-router';
 
 // THIS IS THE HIVEMATE'S TASK LIST PAGE
 const HiveMembersScreen = () => {
@@ -11,7 +12,7 @@ const HiveMembersScreen = () => {
 
   interface HiveMember {
     userId: number;
-    firstname: string;
+    username: string;
     img_path: string;
   }
   
@@ -49,9 +50,18 @@ const HiveMembersScreen = () => {
     }
   };
 
-  useEffect(() => {
-    fetchHiveMembers();
-  }, []);
+  // refresh once users edited their profile, it will immeditaely reflect in this page
+  useFocusEffect(
+    useCallback(() => {
+      fetchHiveMembers();
+    }, [])
+  );
+
+  // route push ng view task page
+  // const viewTaskPress = (userId: number) => {
+  //   router.push(`/ViewTask_Screen?userId=${userId}`);
+  //   console.log(userId);
+  // };
 
   return (
     <ImageBackground source={Images.Pattern} style={style.background}>
@@ -60,10 +70,13 @@ const HiveMembersScreen = () => {
           {members.map((member) => (
             <SafeAreaView key={member.userId} style={style.boxes}>
               <Image style={style.profile} source={{ uri: member.img_path }} />
-              <Text style={style.name}>{member.firstname}</Text>
+              <Text style={style.name}>{member.username}</Text>
               <TouchableOpacity style={style.button} onPress={() => {}}>
                 <Text style={style.buttonText}>View Task</Text>
               </TouchableOpacity>
+              {/* <TouchableOpacity style={style.button} onPress={() => viewTaskPress(member.userId)}> ito ipapalit kapag meron na nung viewTask page
+                <Text style={style.buttonText}>View Task</Text>
+              </TouchableOpacity> */}
             </SafeAreaView>
           ))}
         </ScrollView>
