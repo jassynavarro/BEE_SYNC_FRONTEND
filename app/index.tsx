@@ -1,36 +1,9 @@
-// import { SafeAreaView, StyleSheet, Text } from "react-native";
-// import { Link } from "expo-router";
-
-// //THIS SERVES AS THE MAIN PAGE.
-
-// const index = () => {
-//   return (
-
-//     // safe area view is to make sure the size of the page adjusts to the users devices.
-//     <SafeAreaView style={ style.container }> 
-//       <Text>WELCOME TO BEE SYNC (KUNYARE LOG IN PAGE)</Text>
-//       <Link href={ '/(drawer)/(screens)/calendar' } style={{color: 'red'}}>LOG IN BUTTON KUNO</Link>
-//     </SafeAreaView>
-
-//   )
-// }
-// export default index
-
-// //THIS SERVES AS THE CSS.
-// const style = StyleSheet.create ({
-//   container: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   }
-// })
-
-
-// temporary login screen, just to test the token
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Alert, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
+
+// TEMPORARY LOGIN SCREEN, JUST TO TEST THE TOKEN
 
 const LoginScreen = () => {
   const [username, setUsername] = useState('');
@@ -61,7 +34,7 @@ const LoginScreen = () => {
 
         Alert.alert('Success', 'Logged in successfully!');
         // Navigate to the desired screen
-        router.push('/(drawer)/(screens)/task');
+        router.push('/(drawer)/(screens)/progress');
       } else {
         const errorText = await response.text();
         // console.error('Error response:', response.status, errorText);

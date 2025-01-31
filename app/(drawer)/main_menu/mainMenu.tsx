@@ -1,7 +1,7 @@
 import { StyleSheet, Text, SafeAreaView } from 'react-native'
 import React from 'react';
 
-// THIS IS THE CALENDAR PAGE
+// THIS IS THE MAIN MENU PAGE
 
 const mainMenu = () => {
   return (

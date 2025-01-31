@@ -3,6 +3,8 @@ import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Image } from 'r
 import { useRouter } from 'expo-router';;
 import Images from '../../constants/images';
 
+// THIS IS THE MAIN LAYOUT OF ADD BUTTON
+
 const addButton_layout = () => {
   const router = useRouter(); // Get the router object
   return (
@@ -33,6 +35,22 @@ const addButton_layout = () => {
             fontFamily: 'SemiBold', 
           },             
         }}/>
+      
+      <Stack.Screen 
+        name="QR" 
+        options={{ // This is the style section of what the specific screens container looks like.
+          headerShown: true,
+          headerTitle: "QR Code",
+          headerTitleAlign: 'center',
+          headerTintColor: '#61646B',  // grey // Set the color of the header title
+          headerStyle: {
+            backgroundColor: '#FFEFA4',  // yellow // Set background color of the header
+          },
+          headerTitleStyle: {
+            fontSize: 22, 
+            fontFamily: 'SemiBold', 
+          },
+      }}/>
 
     </Stack>
 

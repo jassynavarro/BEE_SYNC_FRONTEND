@@ -1,11 +1,12 @@
-import { SafeAreaView, ScrollView, ImageBackground, StyleSheet, Text, View,Image, TouchableOpacity, StatusBar } from 'react-native'
-import React, { useState, useEffect, useCallback } from 'react';
+import { SafeAreaView, ScrollView, ImageBackground, StyleSheet, Text, Image, TouchableOpacity } from 'react-native'
+import React, { useState, useCallback } from 'react';
 import Images from '../../../constants/images';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 
 // THIS IS THE HIVEMATE'S TASK LIST PAGE
+
 const HiveMembersScreen = () => {
   const [members, setMembers] = useState<HiveMember[]>([]); // Specify type for state
   const [error, setError] = useState<string | null>(null);

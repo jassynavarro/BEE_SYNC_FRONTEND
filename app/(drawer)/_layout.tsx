@@ -1,32 +1,13 @@
-import React, { useState } from 'react';
-import { Modal, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image } from 'react-native';
 import { Drawer } from "expo-router/drawer";
 import { DrawerItemList } from '@react-navigation/drawer';
 import Images from '../../constants/images';
-import LogOutModal from './log_out/logOut'; // Import LogOutModal component
+
+// THIS IS THE LAYOUT OF THE (DRAWER)
 
 const drawer_layout = () => {
-  const [modalVisible, setModalVisible] = useState(false);
-
-  // Function to handle Log Out button press
-  const handleLogOut = () => {
-    setModalVisible(true); // Show the modal
-  };
-
-  // Function to confirm log out
-  const confirmLogOut = () => {
-    setModalVisible(false); // Hide the modal
-    console.log("User logged out");
-    // Add actual log-out functionality here (e.g., clear auth state, navigate to login screen)
-  };
-
-  // Function to cancel log out
-  const cancelLogOut = () => {
-    setModalVisible(false); // Hide the modal without logging out
-  };
 
   return (
-    <>
       <Drawer
         screenOptions={{
           headerShown: false,
@@ -102,21 +83,11 @@ const drawer_layout = () => {
                 source={Images.Out}
                 style={[style.icon, { tintColor: focused ? '#FFDB36' : '#616060' }]}
               />
-            ),
-          }}
-          listeners={{
-            drawerItemPress: handleLogOut, // Trigger log out confirmation when clicked
+            )
           }}
         />
-      </Drawer>
 
-      {/* Log Out Confirmation Modal */}
-      <LogOutModal
-        visible={modalVisible}
-        onClose={cancelLogOut} // Close the modal if the user presses cancel
-        onConfirm={confirmLogOut} // Log out if the user confirms
-      />
-    </>
+      </Drawer>
   );
 };
 

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, SafeAreaView, Image, TouchableOpacity } from 'react-native'
+import { StyleSheet, SafeAreaView, Image, TouchableOpacity } from 'react-native'
 import React from 'react';
 import { useRouter } from 'expo-router';;
 import Images from '../../../constants/images';
