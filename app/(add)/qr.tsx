@@ -7,17 +7,10 @@ import QRCode from 'react-native-qrcode-svg';
 interface QRCodeModalProps {
   visible: boolean;
   onClose: () => void;
-  hiveId: number | null; // Accept the hiveId prop
+  qrContent: string; // Add qrContent property
 }
 
-const QRCodeModal: React.FC<QRCodeModalProps> = ({ visible, onClose, hiveId }) => {
-  if (hiveId === null) {
-    return null; // Don't render if hiveId is null or not set yet
-  }
-
-  // Create the QR code content with the hiveId
-  const qrContent = `https://bee_sync.com/join?hiveId=${hiveId}`;
-
+const QRCodeModal: React.FC<QRCodeModalProps> = ({ visible, onClose, qrContent }) => {
   return (
     <Modal
       visible={visible}
@@ -28,8 +21,12 @@ const QRCodeModal: React.FC<QRCodeModalProps> = ({ visible, onClose, hiveId }) =
       <SafeAreaView style={styles.modalOverlay}>
         <SafeAreaView style={styles.modalContainer}>
           <Text style={styles.modalTitle}>Your QR Code</Text>
-          {/* Generate QR code with the hiveId */}
-          <QRCode value={qrContent} size={150} />
+          {/* Generate QR code with the qrContent */}
+          {qrContent ? (
+            <QRCode value={qrContent} size={150} />
+          ) : (
+            <Text style={styles.errorText}>No QR content available</Text>
+          )}
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
             <Text style={styles.closeButtonText}>Close</Text>
           </TouchableOpacity>
@@ -73,5 +70,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Bold',
     color: '#FFFFFF',
     fontSize: 16,
+  },
+  errorText: {
+    fontFamily: 'Medium',
+    fontSize: 16,
+    color: 'red',
+    marginTop: 10,
   },
 });
