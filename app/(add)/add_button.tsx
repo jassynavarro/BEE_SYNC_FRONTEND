@@ -1,24 +1,22 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { StyleSheet, Text, TextInput, SafeAreaView, Image, ImageBackground, TouchableOpacity, Alert } from 'react-native';
 import Images from '../../constants/images';
 import QRCodeModal from '../(add)/qr'; // Import the QR modal component
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect } from 'expo-router';
 
 // THIS IS THE ADD MEMBER PAGE
 
 const AddButton = () => {
+  //use state variables
   const [qrVisible, setQrVisible] = useState(false);
   const [hiveId, setHiveId] = useState<number | null>(null);
-  const [loading, setLoading] = useState<boolean>(true); // Loading state
-  const [error, setError] = useState<string | null>(null); // Error state
+  const [loading, setLoading]  =  useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [username, setUsername] = useState<string>('');
 
-  interface id {
-    hiveID: number;
-  }
-
-// Fetch the hiveId from the backend API
-const fetchHiveId = async () => {
+ 
+ // Function to handle adding a member to the hive
+ const addMemberToHive = async () => {
   const jwtToken = await AsyncStorage.getItem('jwtToken');
 
   if (!jwtToken) {
@@ -27,51 +25,33 @@ const fetchHiveId = async () => {
   }
 
   try {
-    const response = await fetch('http://192.168.1.56:8080/HiveMembers/', {
-      method: 'GET',
+    const response = await fetch('http://192.168.0.102:8080/HiveMembers/join', {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${jwtToken}` // Include JWT token in the request
-      }
+      },
+      body: JSON.stringify({ memberUsername: username })
     });
 
-    console.log('Response Status:', response.status);
-    console.log('Response Headers:', response.headers);
-
     if (!response.ok) {
-      throw new Error(`Failed to fetch hive ID. Status: ${response.status}`);
+      const errorMessage = await response.text(); // Get the error message from backend
+      throw new Error(`Failed to add member: ${errorMessage}`);
     }
 
-    const data = await response.json();
-    console.log('Response Data:', data);
-
-    const hiveIdFromResponse = data.length > 0 ? data[0].hiveId : null;
-
-    if (hiveIdFromResponse) {
-      setHiveId(hiveIdFromResponse);
-    } else {
-      throw new Error('No hiveId found.');
-    }
+    const result = await response.text(); // Handle response as text
+    Alert.alert('Success', result);
   } catch (err: any) {
-    console.error('Error fetching hive ID:', err);
-    setError(err.message);
-  } finally {
-    setLoading(false);
+    Alert.alert('Error', err.message);
   }
+
+
 };
-
-  useFocusEffect(
-    useCallback(() => {
-      fetchHiveId();
-    }, [])
-  );
-
-
-  return (
+ return (
     <ImageBackground source={Images.Pattern} style={style.background}>
       <SafeAreaView>
         <Image style={style.display_picture} source={Images.DP} />
-  
+
         {/* QR Code Button */}
         <TouchableOpacity 
           style={style.QRbutton} 
@@ -82,15 +62,20 @@ const fetchHiveId = async () => {
             {loading ? 'Loading...' : 'Generate your QR'}
           </Text>
         </TouchableOpacity>
-  
+
         <Text style={style.orText}>or</Text>
-        <Text style={style.searchText}>Search the Username</Text>
-        <TextInput style={style.searchBar} placeholder="Enter username" />
-  
-        <TouchableOpacity style={style.doneButton} onPress={() => {}}>
+        <Text style={style.searchText}>Add the Username</Text>
+        <TextInput 
+          style={style.searchBar} 
+          placeholder="Enter username" 
+          value={username} 
+          onChangeText={setUsername} // Update username state on input change
+        />
+
+        <TouchableOpacity style={style.doneButton} onPress={addMemberToHive}>
           <Text style={style.doneText}>Done</Text>
         </TouchableOpacity>
-  
+
         {/* QR Code Modal */}
         <QRCodeModal 
           visible={qrVisible} 

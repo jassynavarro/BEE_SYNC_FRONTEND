@@ -28,7 +28,7 @@ const HiveMembersScreen = () => {
     }
 
     try {
-      const response = await fetch('http://192.168.1.56:8080/HiveMembers/membersInfo', {
+      const response = await fetch('http://192.168.0.102:8080/HiveMembers/membersInfo', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

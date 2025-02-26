@@ -17,7 +17,7 @@ const LoginScreen = () => {
     }
 
     try {
-      const response = await fetch('http://192.168.1.56:8080/auth/login', {
+      const response = await fetch('http://192.168.0.102:8080/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
